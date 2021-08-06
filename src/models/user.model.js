@@ -66,12 +66,18 @@ UserSchema.statics.login = async function ({ username, password }) {
 UserSchema.methods.generateJwt = async function () {
     const user = this
 
-    const token = jwt.sign({ username: user.username }, process.env.JWT_KEY, { expiresIn: '14d' })
+    const token = jwt.sign({ username: user.username }, process.env.JWT_KEY, { expiresIn: '1s' })
     user.tokens.push({ payload: token })
 
     await user.save()
 
     return token
+}
+
+UserSchema.methods.deleteJwt = async function (token) {
+    const user = this
+
+
 }
 
 UserSchema.post('validate', async function () {
