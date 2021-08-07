@@ -2,7 +2,7 @@ require('./env')
 const mongoose = require('mongoose')
 
 
-const mongodbUri = process.env.MAIN_DB_URI || 'mongodb://localhost:27017/whatsapp'
+const mongodbUri = process.env.MAIN_DB_URI
 mongoose.connect(mongodbUri,
     {
         useNewUrlParser: true,
