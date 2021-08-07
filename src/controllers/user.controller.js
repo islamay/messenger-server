@@ -1,12 +1,12 @@
 const UserModel = require('../models/user.model')
+const parseToken = require('../helpers/parseToken')
 
 const signup = async (req, res) => {
     try {
         const token = await UserModel.signup(req.body)
         res.json(token)
     } catch (error) {
-        console.log(error.message);
-        res.json(error.message)
+        res.status(400).json(error.message)
     }
 }
 
@@ -17,17 +17,20 @@ const login = async (req, res) => {
         const token = await UserModel.login(req.body)
         res.json(token)
     } catch (error) {
-        res.json(error.message)
+        res.status(401).json(error.message)
     }
 }
 
 module.exports.login = login
 
 const logout = async (req, res) => {
+    const token = parseToken(req.headers.authorization)
+    
     try {
-        console.log(req.body.middle);
+        await UserModel.logout(token)
+        res.sendStatus(200)
     } catch (error) {
-
+        res.sendStatus(401)
     }
 }
 

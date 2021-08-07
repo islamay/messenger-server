@@ -1,0 +1,24 @@
+POST http://localhost:3001/user/signup
+Content-Type: application/json
+
+{
+    "username": "dean",
+    "email": "deanprayoga09@gmail.com",
+    "password": "12345678"
+}
+
+###
+
+POST http://localhost:3001/user/login
+Content-Type: application/json
+
+{
+    "username": "dean",
+    "password": "12345678"
+}
+
+###
+
+POST http://localhost:3001/user/logout
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRlYW4iLCJpYXQiOjE2MjgzMTMzMzgsImV4cCI6MTYyOTUyMjkzOH0.vFm_WiHvghgMKNHFaCFrbIdfnvADzVlZOAVv7G5ztUE
+

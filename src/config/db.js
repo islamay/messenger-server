@@ -10,7 +10,7 @@ mongoose.connect(mongodbUri,
         useUnifiedTopology: true
     }
 ).then(() => {
-    console.log('Success to connect to main db');
+    console.log('success to connect to main db');
 }).catch((error) => {
     console.log(error.message);
 })

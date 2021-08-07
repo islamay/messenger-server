@@ -63,10 +63,27 @@ UserSchema.statics.login = async function ({ username, password }) {
     return token
 }
 
+UserSchema.statics.logout = async function (token) {
+    const UserModel = this
+
+    const user = await UserModel.findByToken(token)
+    if (!user) throw new Error('user not found')
+
+    await user.deleteJwt(token)
+}
+
+UserSchema.statics.findByToken = async function (token) {
+    const UserModel = this
+
+    const user = await UserModel.findOne({'tokens.payload': token})
+    
+    return user
+}
+
 UserSchema.methods.generateJwt = async function () {
     const user = this
 
-    const token = jwt.sign({ username: user.username }, process.env.JWT_KEY, { expiresIn: '1s' })
+    const token = jwt.sign({ username: user.username }, process.env.JWT_KEY, { expiresIn: '14 days' })
     user.tokens.push({ payload: token })
 
     await user.save()
@@ -74,12 +91,22 @@ UserSchema.methods.generateJwt = async function () {
     return token
 }
 
+UserSchema.methods.getPublicProfile = function() {
+    const user = this
+    const userObject = user.toObject()
+
+    delete userObject['password']
+    delete userObject['tokens']
+
+    return userObject
+}
+
 UserSchema.methods.deleteJwt = async function (tokenGiven) {
     const user = this
 
     await user.tokens.forEach(async (token, index) => {
         if (token.payload === tokenGiven) {
-            user.tokens.splice(index, '14 days')
+            user.tokens.splice(index, '1')
             await user.save()
         }
     })
