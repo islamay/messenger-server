@@ -74,10 +74,15 @@ UserSchema.methods.generateJwt = async function () {
     return token
 }
 
-UserSchema.methods.deleteJwt = async function (token) {
+UserSchema.methods.deleteJwt = async function (tokenGiven) {
     const user = this
 
-
+    await user.tokens.forEach(async (token, index) => {
+        if (token.payload === tokenGiven) {
+            user.tokens.splice(index, '14 days')
+            await user.save()
+        }
+    })
 }
 
 UserSchema.post('validate', async function () {

@@ -8,23 +8,26 @@ const auth = async (req, res, next) => {
 
     const token = bearerToken.replace('Bearer ', '')
 
+    console.log(token);
+
     const user = await UserModel.findOne({ 'tokens.payload': token }, ['-password'])
     if (!user) return res.sendStatus(401)
 
     try {
-        const decodedToken = jwt.verify(token, process.env.JWT_KEY)
+        jwt.verify(token, process.env.JWT_KEY)
+
+        delete user.tokens
+
+        req.body.middleware = {
+            ...req.body.middleware,
+            user: user
+        }
+        next()
     } catch (error) {
-
+        await user.deleteJwt(token)
+        res.status(401).json({ error: error.message })
     }
 
-    delete user.tokens
-
-    req.body.middleware = {
-        ...req.body.middleware,
-        user: user
-    }
-
-    res.send('OK')
 }
 
 module.exports = auth

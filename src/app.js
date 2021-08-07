@@ -24,6 +24,8 @@ require('./config/db')
 // Using Routes
 app.use('/user', userRoute)
 
+// Development Only!!!
+// require('./test')
 
 const port = process.env.PORT || 3001
 server.listen(port, () => {

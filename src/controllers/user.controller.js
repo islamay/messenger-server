@@ -22,3 +22,13 @@ const login = async (req, res) => {
 }
 
 module.exports.login = login
+
+const logout = async (req, res) => {
+    try {
+        console.log(req.body.middle);
+    } catch (error) {
+
+    }
+}
+
+module.exports.logout = logout
