@@ -1,11 +1,11 @@
 const parseToken = (rawToken) => {
-    let token = rawToken
+  let token = rawToken;
 
-    if (!token) return res.sendStatus(401)
+  if (!token) return null;
 
-    token = token.replace('Bearer ', '')
+  token = token.replace("Bearer ", "");
 
-    return token
-}
+  return token;
+};
 
-module.exports = parseToken
+module.exports = parseToken;

@@ -1,124 +1,134 @@
-require('../config/env')
-const mongoose = require('mongoose')
-const { isEmail } = require('validator')
-const jwt = require('jsonwebtoken')
-const bcrypt = require('bcrypt')
+require("../config/env");
+const mongoose = require("mongoose");
+const { isEmail } = require("validator");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
 const TokenSchema = new mongoose.Schema({
-    payload: {
-        type: String
-    }
-})
+  payload: {
+    type: String,
+  },
+});
 
 const UserSchema = new mongoose.Schema({
-    username: {
-        type: String,
-        required: true,
-        unique: true,
-        minLength: 3,
-        maxLength: 30
+  username: {
+    type: String,
+    required: true,
+    unique: true,
+    minLength: 3,
+    maxLength: 30,
+  },
+  password: {
+    type: String,
+    required: true,
+    minLength: 8,
+    maxLength: 256,
+  },
+  email: {
+    type: String,
+    required: true,
+    validate(value) {
+      if (!isEmail(value)) throw new Error("email not valid");
     },
-    password: {
-        type: String,
-        required: true,
-        minLength: 8,
-        maxLength: 256
-    },
-    email: {
-        type: String,
-        required: true,
-        validate(value) {
-            if (!isEmail(value)) throw new Error('email not valid')
-        }
-    },
-    tokens: {
-        type: [TokenSchema]
-    }
-})
+  },
+  rooms: [{ roomId: { type: String } }],
+  tokens: {
+    type: [TokenSchema],
+  },
+});
 
 UserSchema.statics.signup = async function ({ username, password, email }) {
-    const UserModel = this
+  const UserModel = this;
 
-    const user = new UserModel(arguments[0])
-    await user.save()
+  const user = new UserModel(arguments[0]);
+  await user.save();
 
-    const token = user.generateJwt()
-    return token
-}
+  const token = user.generateJwt();
+  return token;
+};
 
 UserSchema.statics.login = async function ({ username, password }) {
-    const UserModel = this
+  const UserModel = this;
 
-    const user = await UserModel.findOne({ username: username })
+  const user = await UserModel.findOne({ username: username });
 
-    if (!user) throw new Error('username not found')
+  if (!user) throw new Error("username not found");
 
-    const isValidated = await bcrypt.compare(password, user.password)
-    console.log(password);
+  const isValidated = await bcrypt.compare(password, user.password);
+  console.log(password);
 
-    if (!isValidated) throw new Error('incorrect password')
+  if (!isValidated) throw new Error("incorrect password");
 
-    const token = user.generateJwt()
+  const token = user.generateJwt();
 
-    return token
-}
+  return token;
+};
 
 UserSchema.statics.logout = async function (token) {
-    const UserModel = this
+  const UserModel = this;
 
-    const user = await UserModel.findByToken(token)
-    if (!user) throw new Error('user not found')
+  const user = await UserModel.findByToken(token);
+  if (!user) throw new Error("user not found");
 
-    await user.deleteJwt(token)
-}
+  await user.deleteJwt(token);
+};
 
 UserSchema.statics.findByToken = async function (token) {
-    const UserModel = this
+  const UserModel = this;
 
-    const user = await UserModel.findOne({'tokens.payload': token})
-    
-    return user
-}
+  const user = await UserModel.findOne({ "tokens.payload": token });
+
+  return user;
+};
 
 UserSchema.methods.generateJwt = async function () {
-    const user = this
+  const user = this;
 
-    const token = jwt.sign({ username: user.username }, process.env.JWT_KEY, { expiresIn: '14 days' })
-    user.tokens.push({ payload: token })
+  const token = jwt.sign({ username: user.username }, process.env.JWT_KEY, {
+    expiresIn: "14 days",
+  });
+  user.tokens.push({ payload: token });
 
-    await user.save()
+  await user.save();
 
-    return token
-}
+  return token;
+};
 
-UserSchema.methods.getPublicProfile = function() {
-    const user = this
-    const userObject = user.toObject()
+UserSchema.methods.getPublicProfile = function () {
+  const user = this;
+  const userObject = user.toObject();
 
-    delete userObject['password']
-    delete userObject['tokens']
+  delete userObject["password"];
+  delete userObject["tokens"];
 
-    return userObject
-}
+  return userObject;
+};
 
 UserSchema.methods.deleteJwt = async function (tokenGiven) {
-    const user = this
+  const user = this;
 
-    await user.tokens.forEach(async (token, index) => {
-        if (token.payload === tokenGiven) {
-            user.tokens.splice(index, '1')
-            await user.save()
-        }
-    })
-}
-
-UserSchema.post('validate', async function () {
-    const user = this
-    if (user.isModified('password')) {
-        user.password = await bcrypt.hash(user.password, 8)
+  await user.tokens.forEach(async (token, index) => {
+    if (token.payload === tokenGiven) {
+      user.tokens.splice(index, "1");
+      await user.save();
     }
-})
+  });
+};
 
-const UserModel = mongoose.model('user', UserSchema)
+UserSchema.methods.addRoomToList = async function (roomId) {
+  const user = this;
 
-module.exports = UserModel
+  user.rooms.push({ roomId: roomId });
+  await user.save();
+};
+
+UserSchema.post("validate", async function () {
+  const user = this;
+  if (user.isModified("password")) {
+    user.password = await bcrypt.hash(user.password, 8);
+  }
+});
+
+const UserModel = mongoose.model("user", UserSchema);
+
+module.exports = UserModel;

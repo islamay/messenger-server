@@ -1,0 +1,7 @@
+POST http://localhost:3001/room/private/create
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRlYW5wcmF5b2dhIiwiaWF0IjoxNjI4NjA5ODU2LCJleHAiOjE2Mjk4MTk0NTZ9.RYypDlKicTVMflaeHIsRMqvJvSgONRDtPLOtsMRSxs0
+Content-Type: application/json
+
+{
+    "interlocutorId": "61113718502403322c5f0571"
+}
