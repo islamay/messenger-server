@@ -9,7 +9,9 @@ const userRoute = require('./routes/user')
 
 const app = express()
 const server = http.createServer(app)
-const io = socketio(server)
+const io = socketio(server, { cors: corsConfig })
+
+const { onConnectionLogic } = require('./socket.logic')
 
 // Using Middleware
 app.use(cors(corsConfig))
@@ -24,8 +26,9 @@ require('./config/db')
 // Using Routes
 app.use('/user', userRoute)
 
-// Development Only!!!
-// require('./test')
+// Socket.io Stuff
+io.on('connection', onConnectionLogic)
+
 
 const port = process.env.PORT || 3001
 server.listen(port, () => {
