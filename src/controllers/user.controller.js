@@ -12,10 +12,11 @@ const signup = async (req, res) => {
 
 module.exports.signup = signup;
 
+// Login obj is token and public information
 const login = async (req, res) => {
   try {
-    const token = await UserModel.login(req.body);
-    res.json(token);
+    const loginObj = await UserModel.login(req.body);
+    res.json(loginObj);
   } catch (error) {
     res.status(401).json(error.message);
   }

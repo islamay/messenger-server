@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const UserModel = require('./user.model')
 
 const UserSchema = new mongoose.Schema({
   userId: {
@@ -48,6 +49,34 @@ PrivateRoomSchema.statics.createRoom = async function (user, interlocutor) {
     throw new Error(error.message);
   }
 };
+
+PrivateRoomSchema.statics.findByUsers = async function (userId, interlocutorId) {
+  const PrivateRoomModel = this
+
+  const roomId = await PrivateRoomModel.findOne({
+    'users.userId': userId,
+    'users.userId': interlocutorId
+  }, ['_id'])
+
+  return roomId
+}
+
+PrivateRoomSchema.statics.findByIdAndGetDetail = async function (roomId, userId) {
+  const PrivateRoomModel = this
+  try {
+    const privateRoom = await PrivateRoomModel.findById(roomId)
+    const { userId: interlocutorId } = privateRoom.users.find((user) => user.userId !== String(userId))
+
+    let user = await UserModel.findById(interlocutorId)
+    user = user.getPublicProfile()
+    delete user["rooms"]
+
+    return user
+
+  } catch (error) {
+    return error
+  }
+}
 
 const PrivateRoomModel = mongoose.model("privateRoom", PrivateRoomSchema);
 

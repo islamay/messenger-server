@@ -2,7 +2,7 @@ POST http://localhost:3001/user/signup
 Content-Type: application/json
 
 {
-    "username": "deanpi",
+    "username": "dean",
     "email": "deanprayoga09@gmail.com",
     "password": "12345678"
 }
@@ -13,7 +13,7 @@ POST http://localhost:3001/user/login
 Content-Type: application/json
 
 {
-    "username": "dean",
+    "username": "deanpi",
     "password": "12345678"
 }
 

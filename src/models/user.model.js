@@ -4,6 +4,8 @@ const { isEmail } = require("validator");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
+const defaultImgSrc = 'https://i.stack.imgur.com/34AD2.jpg'
+
 const TokenSchema = new mongoose.Schema({
   payload: {
     type: String,
@@ -31,6 +33,11 @@ const UserSchema = new mongoose.Schema({
       if (!isEmail(value)) throw new Error("email not valid");
     },
   },
+  imgSrc: {
+    type: String,
+    required: true,
+    default: "https://i.stack.imgur.com/34AD2.jpg"
+  },
   rooms: [{ roomId: { type: String } }],
   tokens: {
     type: [TokenSchema],
@@ -55,13 +62,13 @@ UserSchema.statics.login = async function ({ username, password }) {
   if (!user) throw new Error("username not found");
 
   const isValidated = await bcrypt.compare(password, user.password);
-  console.log(password);
 
   if (!isValidated) throw new Error("incorrect password");
 
-  const token = user.generateJwt();
+  const token = await user.generateJwt();
+  const publicProfile = user.getPublicProfile()
 
-  return token;
+  return { token, publicProfile };
 };
 
 UserSchema.statics.logout = async function (token) {
@@ -100,6 +107,7 @@ UserSchema.methods.getPublicProfile = function () {
 
   delete userObject["password"];
   delete userObject["tokens"];
+  delete userObject['email']
 
   return userObject;
 };
@@ -128,6 +136,11 @@ UserSchema.post("validate", async function () {
     user.password = await bcrypt.hash(user.password, 8);
   }
 });
+
+UserSchema.pre('validate', function () {
+  const user = this
+  if (user.imgSrc === null) user.imgSrc = defaultImgSrc
+})
 
 const UserModel = mongoose.model("user", UserSchema);
 

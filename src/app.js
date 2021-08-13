@@ -7,6 +7,7 @@ const http = require("http");
 const corsConfig = require("./config/cors");
 const userRoute = require("./routes/user");
 const roomRoute = require("./routes/room");
+const messageRoute = require('./routes/message')
 const authMiddleware = require("./middlewares/auth");
 
 const app = express();
@@ -28,6 +29,7 @@ require("./config/db");
 // Using Routes
 app.use("/user", userRoute);
 app.use("/room", authMiddleware, roomRoute);
+app.use("/message", authMiddleware, messageRoute);
 
 // Socket.io Stuff
 io.on("connection", onConnectionLogic);

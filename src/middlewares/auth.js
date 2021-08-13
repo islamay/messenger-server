@@ -13,7 +13,7 @@ const auth = async (req, res, next) => {
   try {
     jwt.verify(token, process.env.JWT_KEY);
   } catch (error) {
-    console.log("error in here");
+    console.log(error);
     await user.deleteJwt(token);
     return res.status(401).json({ error: error.message });
   }
