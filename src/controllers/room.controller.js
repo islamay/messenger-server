@@ -1,4 +1,5 @@
 const PrivateRoomModel = require("../models/privateRoom.model");
+const UserModel = require('../models/user.model')
 const checkUser = require("../helpers/checkUser");
 
 const getRoom = async (req, res) => {
@@ -16,15 +17,18 @@ const getRoom = async (req, res) => {
 module.exports.getRoom = getRoom
 
 const createPrivateRoom = async (req, res) => {
-  const { interlocutorId } = req.body;
+  const { interlocutorUsername } = req.body;
   const { _id: userId } = req.body.middleware.user;
 
-  const user = await checkUser(userId);
-  const interlocutor = await checkUser(interlocutorId);
-  if (!user) return res.sendStatus(400);
-  if (!interlocutor) return res.sendStatus(400);
+  
 
   try {
+    let interlocuter = await UserModel.findOne({username: interlocutorUsername})
+    if (!interlocuter) return res.sendStatus(404)
+
+    interlocutor = interlocuter.getPublicProfile()
+    const {interlocuterId} = interlocuter
+
     const roomId = await PrivateRoomModel.findByUsers(userId, interlocutorId)
     if (roomId) return res.json(roomId)
 
@@ -33,7 +37,7 @@ const createPrivateRoom = async (req, res) => {
   }
 
   try {
-    const roomId = await PrivateRoomModel.createRoom(user, interlocutor);
+    const roomId = await PrivateRoomModel.createRoom(userId, interlocutorId);
     res.status(201).json(roomId);
   } catch (error) {
     return res.sendStatus(500)

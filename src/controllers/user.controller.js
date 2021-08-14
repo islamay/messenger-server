@@ -3,8 +3,8 @@ const parseToken = require("../helpers/parseToken");
 
 const signup = async (req, res) => {
   try {
-    const token = await UserModel.signup(req.body);
-    res.json(token);
+    const loginObj = await UserModel.signup(req.body);
+    res.json(loginObj);
   } catch (error) {
     res.status(400).json(error.message);
   }
