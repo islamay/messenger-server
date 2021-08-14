@@ -50,7 +50,7 @@ UserSchema.statics.signup = async function ({ username, password, email }) {
   const user = new UserModel(arguments[0]);
   await user.save();
 
-  const token = user.generateJwt();
+  const token = await user.generateJwt();
   const publicProfile = user.getPublicProfile()
   return {token, publicProfile};
 };
