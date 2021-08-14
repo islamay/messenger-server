@@ -21,25 +21,28 @@ const createPrivateRoom = async (req, res) => {
   const { _id: userId } = req.body.middleware.user;
 
   
+  let interlocutor = await UserModel.findOne({username: interlocutorUsername})
+  if (!interlocutor) return res.sendStatus(404)
+  interlocutor = interlocutor.getPublicProfile()
+  const {_id:interlocutorId} = interlocutor
 
   try {
-    let interlocuter = await UserModel.findOne({username: interlocutorUsername})
-    if (!interlocuter) return res.sendStatus(404)
 
-    interlocutor = interlocuter.getPublicProfile()
-    const {interlocuterId} = interlocuter
 
     const roomId = await PrivateRoomModel.findByUsers(userId, interlocutorId)
     if (roomId) return res.json(roomId)
 
   } catch (error) {
+    console.log(error.message);
     return res.sendStatus(500)
   }
 
   try {
-    const roomId = await PrivateRoomModel.createRoom(userId, interlocutorId);
+    const roomId = await PrivateRoomModel.createRoom(req.body.middleware.user, interlocutor);
     res.status(201).json(roomId);
   } catch (error) {
+    console.log('error 2');
+    console.log(error.message);
     return res.sendStatus(500)
   }
 };

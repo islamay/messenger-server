@@ -1,6 +1,5 @@
 const parseToken = (rawToken) => {
   let token = rawToken;
-  console.log(token);
 
   if (!token) return null;
 

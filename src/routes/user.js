@@ -9,4 +9,6 @@ router.post("/login", userController.login);
 
 router.post("/logout", userController.logout);
 
+router.get('/find-by-token', userController.findByToken)
+
 module.exports = router;

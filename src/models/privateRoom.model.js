@@ -54,9 +54,12 @@ PrivateRoomSchema.statics.findByUsers = async function (userId, interlocutorId) 
   const PrivateRoomModel = this
 
   const roomId = await PrivateRoomModel.findOne({
-    'users.userId': userId,
-    'users.userId': interlocutorId
+    'users.userId': {
+      $all: [userId, interlocutorId]
+    }
   }, ['_id'])
+
+  console.log(roomId);
 
   return roomId
 }

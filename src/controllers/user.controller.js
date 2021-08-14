@@ -36,3 +36,21 @@ const logout = async (req, res) => {
 };
 
 module.exports.logout = logout;
+
+
+const findByToken = async (req, res) => {
+
+  console.log(req.headers.authorization);
+  const token = parseToken(req.headers.authorization)
+
+  
+  let user = await UserModel.findByToken(token)
+
+
+  if (!user) return res.sendStatus(400)
+  user = user.getPublicProfile()
+
+  res.json(user)
+}
+
+module.exports.findByToken = findByToken

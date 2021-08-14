@@ -20,7 +20,7 @@ const auth = async (req, res, next) => {
 
   req.body.middleware = {
     ...req.body.middleware,
-    user: user.getPublicProfile(),
+    user: user,
   };
 
   next();
