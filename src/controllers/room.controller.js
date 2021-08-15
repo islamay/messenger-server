@@ -3,7 +3,7 @@ const UserModel = require('../models/user.model')
 const checkUser = require("../helpers/checkUser");
 
 const getRoom = async (req, res) => {
-  const { roomId } = req.body
+  const { id: roomId } = req.params
   const { _id: userId } = req.body.middleware.user
 
   try {
