@@ -1,6 +1,6 @@
 const PrivateRoomModel = require("../models/privateRoom.model");
 const UserModel = require('../models/user.model')
-const checkUser = require("../helpers/checkUser");
+const MessageModel = require('../models/message')
 
 const getRoom = async (req, res) => {
   const { id: roomId } = req.params
@@ -48,4 +48,15 @@ const createPrivateRoom = async (req, res) => {
 };
 
 module.exports.createPrivateRoom = createPrivateRoom;
+
+const getMessages = async (req, res) => {
+  const { id: roomId } = req.params
+
+  const messages = await MessageModel.find({ toRoom: roomId })
+
+  res.json(messages)
+
+}
+
+module.exports.getMessages = getMessages
 

@@ -74,7 +74,7 @@ PrivateRoomSchema.statics.findByIdAndGetDetail = async function (roomId, userId)
     user = user.getPublicProfile()
     delete user["rooms"]
 
-    return user
+    return { ...user, roomId: privateRoom._id }
 
   } catch (error) {
     return error
