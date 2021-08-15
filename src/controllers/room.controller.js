@@ -20,11 +20,11 @@ const createPrivateRoom = async (req, res) => {
   const { interlocutorUsername } = req.body;
   const { _id: userId } = req.body.middleware.user;
 
-  
-  let interlocutor = await UserModel.findOne({username: interlocutorUsername})
+
+  const interlocutor = await UserModel.findOne({ username: interlocutorUsername })
   if (!interlocutor) return res.sendStatus(404)
-  interlocutor = interlocutor.getPublicProfile()
-  const {_id:interlocutorId} = interlocutor
+  const interlocutorPublic = interlocutor.getPublicProfile()
+  const { _id: interlocutorId } = interlocutorPublic
 
   try {
 
