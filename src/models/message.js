@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const moment = require('moment')
 
 const MessageSchema = new mongoose.Schema({
     message: {
@@ -18,7 +19,7 @@ const MessageSchema = new mongoose.Schema({
     },
     time: {
         type: Date,
-        default: Date.now()
+        default: moment()
     }
 })
 
@@ -35,7 +36,7 @@ MessageSchema.statics.sendMessage = async function (param) {
 
         await message.save()
 
-        return true
+        return message
     } catch (error) {
         return error
     }

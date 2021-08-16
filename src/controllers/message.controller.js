@@ -5,10 +5,10 @@ const sendMessage = async (req, res) => {
     const { _id: userId } = req.body.middleware.user
 
     try {
-        const sent = await MessageModel.sendMessage({ message, roomId, interlocutorId, userId })
-        console.log(sent);
-        res.sendStatus(200)
+        const resultMessage = await MessageModel.sendMessage({ message, roomId, interlocutorId, userId })
+        res.json(resultMessage)
     } catch (error) {
+        console.log(error);
         res.sendStatus(400)
     }
 
