@@ -1,9 +1,9 @@
 POST http://localhost:3001/message/send
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRlYW5waSIsImlhdCI6MTYyODgxMjM5NCwiZXhwIjoxNjMwMDIxOTk0fQ.3TxSCtyX8UyOqDsGhSu9VZksXrI8nXzqKxjQySP8Oa4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRlYW5waSIsImlhdCI6MTYyODk5NzI1NSwiZXhwIjoxNjMwMjA2ODU1fQ.aXYFYO37llGfycsfte37K-30mz1AJM40jq3134IuwKE
 Content-Type: application/json
 
 {
     "interlocutorId": "6115bbddf75edc26382be49f",
-    "roomId": "6115bc67f75edc26382be4a6",
+    "roomId": "61188087d649c337a837cbfa",
     "message": "Hi"
 }
