@@ -4,7 +4,7 @@ const { isEmail } = require("validator");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
-const defaultImgSrc = 'https://i.stack.imgur.com/34AD2.jpg'
+const defaultImgSrc = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'
 
 const TokenSchema = new mongoose.Schema({
   payload: {
@@ -36,7 +36,7 @@ const UserSchema = new mongoose.Schema({
   imgSrc: {
     type: String,
     required: true,
-    default: "https://i.stack.imgur.com/34AD2.jpg"
+    default: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
   },
   rooms: [{ roomId: { type: String } }],
   tokens: {
@@ -52,7 +52,7 @@ UserSchema.statics.signup = async function ({ username, password, email }) {
 
   const token = await user.generateJwt();
   const publicProfile = user.getPublicProfile()
-  return {token, publicProfile};
+  return { token, publicProfile };
 };
 
 UserSchema.statics.login = async function ({ username, password }) {
