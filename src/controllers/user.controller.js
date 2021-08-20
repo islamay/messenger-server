@@ -43,7 +43,7 @@ const findByToken = async (req, res) => {
   console.log(req.headers.authorization);
   const token = parseToken(req.headers.authorization)
 
-  
+
   let user = await UserModel.findByToken(token)
 
 
@@ -54,3 +54,11 @@ const findByToken = async (req, res) => {
 }
 
 module.exports.findByToken = findByToken
+
+const verify = async (req, res) => {
+  console.log(req.body.middleware);
+
+  res.sendStatus(200)
+}
+
+module.exports.verify = verify
