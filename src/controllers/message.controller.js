@@ -1,17 +1,22 @@
 const MessageModel = require('../models/message')
 
-const sendMessage = async (req, res) => {
-    const { message, roomId, interlocutorId } = req.body
-    const { _id: userId } = req.body.middleware.user
+module.exports.sendMessage = (io) => {
 
-    try {
-        const resultMessage = await MessageModel.sendMessage({ message, roomId, interlocutorId, userId })
-        res.json(resultMessage)
-    } catch (error) {
-        console.log(error);
-        res.sendStatus(400)
+    return async (req, res) => {
+        const { message, roomId, interlocutorId } = req.body
+        const { _id: userId } = req.body.middleware.user
+
+        try {
+            const resultMessage = await MessageModel.sendMessage({ message, roomId, interlocutorId, userId })
+            res.json(resultMessage)
+            // resultMessage.toRoom type suprisingly object type
+            io.to(String(resultMessage.toRoom)).emit('newMessage', resultMessage)
+        } catch (error) {
+            console.log(error);
+            res.sendStatus(400)
+        }
     }
+
 
 }
 
-module.exports.sendMessage = sendMessage

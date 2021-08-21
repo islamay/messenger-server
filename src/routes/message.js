@@ -3,6 +3,9 @@ const messageController = require('../controllers/message.controller')
 
 const router = express.Router()
 
-router.post('/send', messageController.sendMessage)
+module.exports = (io) => {
 
-module.exports = router
+    router.post('/send', messageController.sendMessage(io))
+
+    return router
+}

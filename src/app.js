@@ -21,7 +21,7 @@ app.use(cors(corsConfig));
 app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(morgan("dev"));
+// app.use(morgan("dev"));
 
 // DB
 require("./config/db");
@@ -29,7 +29,7 @@ require("./config/db");
 // Using Routes
 app.use("/user", userRoute);
 app.use("/room", authMiddleware, roomRoute);
-app.use("/message", authMiddleware, messageRoute);
+app.use("/message", authMiddleware, messageRoute(io));
 
 // Socket.io Stuff
 io.on("connection", onConnectionLogic);

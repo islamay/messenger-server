@@ -40,7 +40,6 @@ module.exports.logout = logout;
 
 const findByToken = async (req, res) => {
 
-  console.log(req.headers.authorization);
   const token = parseToken(req.headers.authorization)
 
 
@@ -56,7 +55,6 @@ const findByToken = async (req, res) => {
 module.exports.findByToken = findByToken
 
 const verify = async (req, res) => {
-  console.log(req.body.middleware);
 
   res.sendStatus(200)
 }

@@ -2,13 +2,9 @@
 
 
 const onConnectionLogic = socket => {
-
-    socket.on('join', roomId => {
-
-        socket.join(roomId)
+    socket.on('joinRooms', roomIds => {
+        socket.join(roomIds)
     })
-
-    console.log('Hi');
 }
 
 module.exports.onConnectionLogic = onConnectionLogic
