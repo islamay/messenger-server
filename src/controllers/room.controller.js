@@ -54,7 +54,7 @@ const getMessages = async (req, res) => {
 
   const messages = await MessageModel.find({ toRoom: roomId })
 
-  res.json(messages)
+  res.json({ roomId, messages })
 
 }
 
